@@ -4,27 +4,34 @@ import mysql.connector
 import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, Table, Column, Integer, Float, String, MetaData
+
 # Read the CSV file using NumPy
 data = np.genfromtxt('Test.csv', delimiter=',', skip_header=1, dtype=None, names=True)
 
+# Convert NumPy array to pandas DataFrame
 df = pd.DataFrame(data)
 
-#engine = create_engine('mysql+mysqlconnector://[user]:[pass]@[host]:[port]/[schema]', echo=False)
+try:
+    # Create a SQLAlchemy engine
+    engine = create_engine('mysql+mysqlconnector://root:123456789@localhost:3306/testdb', echo=False)
+except:
+    print("database not connected")
 
-engine = create_engine('mysql+mysqlconnector://root:123456789@localhost:3306/testdb', echo=False)
-
-# Create a cursor object
-#cursor = engine.cursor()
-
+# Store the DataFrame in MySQL
 df.to_sql('my_table',engine,if_exists='replace',index='Fasle')
 
-print('done')
-db = mysql.connector.connect(
-host="localhost",
-user="root",
-password="123456789",
-database="testDB"
-)
+# if the connect destory than this code again connect to database
+try:
+    # connection 
+    db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="123456789",
+    database="testDB"
+    )
+except:
+    print("database not connected")
+
 # Create a cursor object
 cursor = db.cursor()
 
@@ -45,7 +52,6 @@ def insert_data():
 
 # Function to delete data from the table
 def delete_data():
-    #id = int(input("Enter ID of the data to delete: "))
     question = input("Enter name to search question: ")
     sql = "DELETE FROM my_table WHERE Questions = %s"
     adr = (question, )
@@ -98,3 +104,4 @@ while True:
         break
     else:
         print("Invalid choice. Please try again.")
+        
