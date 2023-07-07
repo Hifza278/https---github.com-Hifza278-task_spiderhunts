@@ -11,7 +11,7 @@ df = pd.DataFrame(data)
 try:
     # Create a SQLAlchemy engine
     engine = create_engine('mysql://root:@localhost/test_database')
-except:
+except: 
     print("database not connected")
 
 # Store the DataFrame in MySQL
