@@ -1,49 +1,50 @@
 #pip install pymongo
-
 from pymongo import MongoClient
 import csv
 import pandas as pd
 
-# Connect to MongoDB
-client = MongoClient('mongodb://localhost:27017')  #mongodb://localhost:27017
-db = client['test_db']  # Replace with your database name
-collection = db['test']  # Replace with your collection name
+try:
+    # Connect to MongoDB
+    client = MongoClient('mongodb://localhost:27017')  #mongodb://localhost:27017
+    db = client['test_db']  # Replace with your database name
+    collection = db['test']  # Replace with your collection name
+except:
+    print("database not connected")
 
 # Load CSV data into a pandas DataFrame
 data = pd.read_csv('Test.csv')
 
 # Convert DataFrame to a list of dictionaries
 data_dict = data.to_dict(orient='records')
+
 # Insert the data into the MongoDB collection
 collection.insert_many(data_dict)
 
-# Close the MongoDB connection
-#client.close()
-
+# Function to insert data into the table
 def insert_data():
     # Get input from user
     id = input("Enter id: ")
     Questions = input("Enter Questions: ")
-   
-
+    
     # Create document
     document = {
         'id': id,
         'Questions': Questions
     }
-
     # Insert document into collection
     collection.insert_one(document)
     print("Data inserted successfully.")
 
+# Function to Delete data into the table
 def delete_data():
     # Get input from user
     id = input("Enter id to delete: ")
-
+    
     # Delete document(s) from collection
     result = collection.delete_many({'id': id})
     print(f"{result.deleted_count} document(s) deleted.")
 
+# Function to Search data into the table
 def search_data():
     # Get input from user
     id = input("Enter id to search: ")
@@ -56,6 +57,7 @@ def search_data():
     for document in documents:
         print(document)
 
+# Function to Update data into the table
 def update_data():
     # Get input from user
     id = input("Enter id to update: ")
